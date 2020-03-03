@@ -26,7 +26,7 @@ get_bar_chart <- function(dataset) {
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
   
   a <- list(
-    title = "AXIS TITLE",
+    title = "Counties",
     showticklabels = TRUE,
     tickangle = 45,
     exponentformat = "E"
