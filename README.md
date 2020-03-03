@@ -1,4 +1,4 @@
-# Final Project
+# Final Project ([Report Link](https://marcrng.github.io/self/))
 ## Domain of Interest
 - **Why are you interested in this field/domain? (2-3 sentences)**
     - To explore wage trends in Washington in terms of location/demographic
