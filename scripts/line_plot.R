@@ -7,6 +7,6 @@ get_line_plot <- function(dataset) {
     add_lines(hovertemplate = paste("Average income: $%{y:.0f}")) %>%
     layout(title = "Average Household Income YOY",
            xaxis = list(title ="Year"),
-           yaxis = list(title = "Average Household Income Totals"),
+           yaxis = list(title = "Average Household Income"),
            hovermode = "compare")
 }
