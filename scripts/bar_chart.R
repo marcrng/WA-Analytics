@@ -4,11 +4,10 @@ library(plotly)
 source("scripts/aggregate_tbl.R")
 
 get_bar_chart <- function(dataset) {
-  # Return only 4 highest earning races from each county
+  # Return only 3 highest earning races from each county
   dataset <- dataset %>%
-    top_n(4, household_income)
+    top_n(3, household_income)
     
-  
   # Create bar chart
   bar_chart <- ggplot(dataset) +
     geom_col(
@@ -26,6 +25,16 @@ get_bar_chart <- function(dataset) {
     ) +
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
   
+  a <- list(
+    title = "AXIS TITLE",
+    showticklabels = TRUE,
+    tickangle = 45,
+    exponentformat = "E"
+  )
+  
   # Convert to plotly chart -- ggplot2 visualization was unsatisfactory
-  ggplotly(bar_chart, tooltip = "Race")
+  ggplotly(bar_chart, tooltip = "Race") %>% 
+    layout(xaxis = a)
 }
+
+get_bar_chart(get_race_aggregate(df_location))
