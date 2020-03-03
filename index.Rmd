@@ -37,19 +37,19 @@ The dataset used for this report consists of `r info_list$row_num` rows and `r i
 ## Visualizations
 
 `r get_bar_chart(get_race_aggregate(df_location))`
-- This chart was intended to show the relationship between the top 3 earners in terms of race for each county.  
+This chart was intended to show the relationship between the top 3 earners in terms of race for each county.  
   
 - We can observe that Asians are the highest earners for most counties, with White Non-Hispanics becoming the lead earners in the lower earning counties. It is also worth observing that Mason County, WA earns considerably less than all the other counties surveyed.
 
 ***
 `r get_line_plot(get_year_aggregate(df_location))`
-- This chart was intended to show the relationship between average household income totals year-over-year.
+This chart was intended to show the relationship between average household income totals year-over-year.
 
 - We can observe that although Asians were the highest earners for the top earning counties in the previous visualizations, White Non-Hispanics and Whites had the highest income for each year other than 2014.  
 Furthermore, those that identified as two or more races displayed the highest wage growth from 2013 to 2018 out of all the races surveyed.
 
 ***
 `r get_pie_chart(get_state_aggregate(df_location))`
-- This chart was intended to show the total income by race in Washington State for 2018. The labels are arranged from highest earners to lowest.
+This chart was intended to show the total income by race in Washington State for 2018. The labels are arranged from highest earners to lowest.
 
 - We can observe that White Non-Hispanics, Whites, those that identify as two or more races, and Asians collectively earned about 50% of Washington's income in 2018. 
