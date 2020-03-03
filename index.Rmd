@@ -1,0 +1,29 @@
+---
+title: "Salary and Income Report"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+source("scripts/summary_info.R")
+source("scripts/aggregate_tbl.R")
+source("scripts/bar_chart.R")
+source("scripts/line_plot.R")
+source("scripts/pie_chart.R")
+```
+***
+## Introduction
+
+This report is compiled using data collected by the US Census, through their American Community Survey. This is a national survey that samples approximately 3.54 million addresses each year, and collects data on social, economic, housing, and demographic characteristics of Americans. This report aims to explore the wage trends and provide insight into the income characteristics of Washington State and its counties.
+
+***
+#### Summary Information
+The dataset used for this report consists of `r info_list$row_num` rows and `r info_list$col_num` columns. It separates income by `r info_list$years_num` different years and `r info_list$race_num` different races. There were `r info_list$county_num` counties surveyed.
+
+***
+## Sample of Dataset Table
+
+`r kable(head(get_race_aggregate(df_location), n = 25L), col.names = c("County", "Race", "Average Household Income", "Total County Income"))`
+
+- This dataset 
