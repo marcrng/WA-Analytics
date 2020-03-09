@@ -29,7 +29,7 @@ pg_gender <- tabPanel("Gender",
                                   inputId = "arr_var",
                                   label = "Sort by:",
                                   choices = c(
-                                      
+                                      "High" = "high"
                                   ),
                                   selected = "High"
                               )
