@@ -1,69 +1,30 @@
-library(knitr)
 library(shiny)
-library(rmarkdown)
-library(lazyeval)
-library(scatterD3)
 library(tidyr)
+library(plotly)
+library(dplyr)
+library(lazyeval)
+library(knitr)
+source("ui.R")
+
+
 
 server <- function(input, output) {
-    
-    # Read genders dataset
-    df_genders <- read.csv("../data/Comparison by Gender.csv",
-                           stringsAsFactors = F)
-    
-    # Read occupation dataset
-    df_occ <- read.csv("../data/Employment by Occupations.csv",
-                       stringsAsFactors = F)
-    
-    # Read income dataset
-    df_inc <- read.csv("../data/Income by Location.csv",
-                       stringsAsFactors = F)
-    
-    # # Gender scatter3d plot
-    # output$occ_scatter <- renderScatterD3({
-    #     
-    #     df_genders <- read.csv("../data/Comparison by Gender.csv", stringsAsFactors = F)
-    #     df_genders <- df_genders[complete.cases(df_genders), ]
-    #     df_genders <- df_genders %>% 
-    #         filter(Jobtitle != "Grand Total")
-    #     
-    #     data <- reactive({
-    #         df_genders[1:input$slider,]
-    #     })
-    #     
-    #     scatterD3(
-    #         x = data()[,input$x_var],
-    #         y = data()[,input$y_var],
-    #         xlab = input$x_var,
-    #         ylab = input$y_var,
-    #         col_var = data()[,input$col_var],
-    #         transitions = T,
-    #         tooltip_text = paste0(
-    #             "Job Title: ", data()[,"Jobtitle"],
-    #             "</br> Average Hourly Rate: ",
-    #             data()[,"Total.Avg.Hrly.Rate"], "$",
-    #             "</br> Total Number Employed: ",
-    #             data()[,"Total.No..Empl"]
-    #         )
-    #     )
-    # })
-    
-    # Output gender plotly plot
+    # Output gender plot
     output$gender_plotly <- renderPlotly({
-        
+
         # Filter NA from dataframe
         gen_data <- df_genders[complete.cases(df_genders), ] %>%
-            
-            # Create gap columns
+
+            # Create gender gap columns
             mutate(m_gap  = Male.Avg.Hrly.Rate - Female.Avg.Hrly.Rate) %>%
             mutate(f_gap  = Female.Avg.Hrly.Rate - Male.Avg.Hrly.Rate) %>%
             filter(Jobtitle != "Grand Total") %>%
             arrange_at(interp(input$arr_var)) %>%
-            
-            # Filter no. of obs.
+
+            # Filter no. of obs. reactively
             head(input$slider)
-        
-        # Job title vs. hourly rate
+
+        # Create gender barbell plot
         plot_ly(
             data = gen_data,
             x = ~Male.Avg.Hrly.Rate,
@@ -76,8 +37,8 @@ server <- function(input, output) {
             hoverinfo = "text",
             text = ~paste0(
                 "</br> Job Title: ", Jobtitle,
-                "</br> Hourly Wage: ", Male.Avg.Hrly.Rate, "$",
-                "</br> # Male Employees: ", No..Male.Empl)
+                "</br> Hourly Wage: ", "$", Male.Avg.Hrly.Rate,
+                "</br> # of Male Employees: ", No..Male.Empl)
         )  %>%
             add_trace(
                 x = ~Female.Avg.Hrly.Rate,
@@ -89,8 +50,8 @@ server <- function(input, output) {
                 hoverinfo = "text",
                 text = ~paste0(
                     "</br> Job Title: ", Jobtitle,
-                    "</br> Hourly Wage: ", Female.Avg.Hrly.Rate, "$",
-                    "</br> # Female Employees: ", No..Female.Empl)
+                    "</br> Hourly Wage: ", "$", Female.Avg.Hrly.Rate,
+                    "</br> # of Female Employees: ", No..Female.Empl)
             ) %>%
             add_segments(
                 x = ~Female.Avg.Hrly.Rate,
@@ -136,12 +97,117 @@ server <- function(input, output) {
                 )
             )
     })
-    
-    output$occ_plotly <- renderPlotly({
-        
-        # Filter any rows with NA
-        occ_data <- df_occ[complete.cases(df_occ), ]
-        
-        
+
+
+    # Filter any rows with NA
+    occ_data <- df_occ[complete.cases(df_occ), ] %>%
+        select(
+            Minor.Occupation.Group,
+            Broad.Occupation,
+            Detailed.Occupation,
+            Average.Wage,
+            Total.Population,
+            Year
+        )
+    # Create occupation bar chart
+    output$occ_bar <- renderPlotly({
+
+        # Rename bar data for filtering
+        occ_bar_data <- occ_data %>%
+            group_by(Broad.Occupation) %>%
+            arrange(-Average.Wage) %>%
+            filter(
+                Broad.Occupation %in% !!input$occ_input &
+                    Year == !!input$year_input
+            )
+
+        # Create occupation bar chart
+        plot_ly(
+            occ_bar_data,
+            type = "bar",
+            x = ~reorder(Detailed.Occupation, -Average.Wage),
+            y = ~Average.Wage,
+            color = ~Broad.Occupation,
+            height = 1200,
+            hoverinfo = "text",
+            text = ~paste0(
+                "</br> Occupation: ", Detailed.Occupation,
+                "</br> Salary: ", "$", round(Average.Wage),
+                "</br> Number Employed: ", Total.Population
+            )
+        ) %>%
+            layout(
+                title = "Average Salary by Occupation - WA",
+                barmode = "group",
+                plot_bgcolor = "transparent",
+                paper_bgcolor = "transparent",
+                font = list(color = "lightgrey"),
+                xaxis = list(
+                    title = "Occupation Name",
+                    type = "category",
+                    tickangle = -45
+                ),
+                yaxis = list(
+                    title = "Average Salary"
+                ),
+                margin = list(
+
+                ),
+                legend = list(
+                    x = 0.7,
+                    y = 0.9
+                )
+            )
+    })
+
+    # YOY dotplot
+    output$occ_line <- renderPlotly({
+
+        # Data for dotplot
+        occ_line_data <- occ_data %>%
+            filter(Broad.Occupation %in% !!input$occ_input2)
+
+        # Create YOY dotplot
+        plot_ly(
+            occ_line_data,
+            type = "scatter",
+            mode = "markers",
+            x = ~Total.Population,
+            y = ~Average.Wage,
+            color = ~Broad.Occupation,
+            ids = ~Detailed.Occupation,
+            frame = ~Year,
+            hoverinfo = "text",
+            height = 1200,
+            text = ~paste0(
+                "</br> Occupation: ", Detailed.Occupation,
+                "</br> Salary: ", "$", round(Average.Wage),
+                "</br> Number Employed: ", Total.Population
+            )
+        ) %>%
+            layout(
+                title = "Wage Trends Year-Over-Year - WA",
+                plot_bgcolor = "transparent",
+                paper_bgcolor = "transparent",
+                font = list(color = "lightgrey"),
+                xaxis = list(
+                    title = "Total Employed",
+                    type = "log",
+                    showgrid = F,
+                    showticklabels = F,
+                    showspikes = T
+                ),
+                yaxis = list(
+                    title = "Average Salary",
+                    showspikes = T
+                ),
+                legend = list(
+                    x = 0.67,
+                    y = 0.9
+                )
+            ) %>%
+            animation_opts(
+                1200, easing = "linear", redraw = F
+            )
     })
 }
