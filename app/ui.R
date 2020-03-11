@@ -18,100 +18,79 @@ pg_overview <- tabPanel("Overview",# Page 1 label
                         fluidPage(includeMarkdown("overview.md"))
 )
 
-
+# Gender Page
 pg_gender <- tabPanel(
   "Gender",
-  titlePanel("Gender Comparisons"),
+  titlePanel("Comparison by Gender"),
   sidebarLayout(
     
     # Sidebar content
     sidebarPanel(
       
-      # X column selection
+      # Arrange picker
       selectInput(
-        inputId = "x_var",
-        label = "X Variable:",
-        selected = "Female.Avg.Hrly.Rate",
+        inputId = "arr_var",
+        label = "Sort by:",
+        selected = "f_gap",
         choices = c(
           "Hourly Pay - Women" = "Female.Avg.Hrly.Rate",
           "Hourly Pay - Men" = "Male.Avg.Hrly.Rate",
-          "Total Average Hourly Pay" = "Total.Avg.Hrly.Rate",
-          "Number Employed - Women" = "No..Female.Empl",
-          "Number Employed - Men" = "No..Male.Empl",
-          "Total Employed"= "Total.No..Empl"
-        ),
+          "Largest Gap - Women to Men" = "f_gap",
+          "Largest Gap - Men to Women" = "m_gap"
+        )
       ),
-      # Y column selection
-      selectInput(
-        inputId = "y_var",
-        label = "Y Variable:",
-        selected = "Male.Avg.Hrly.Rate",
-        choices = c(
-          "Hourly Pay - Women" = "Female.Avg.Hrly.Rate",
-          "Hourly Pay - Men" = "Male.Avg.Hrly.Rate",
-          "Total Average Hourly Pay" = "Total.Avg.Hrly.Rate",
-          "Number Employed - Women" = "No..Female.Empl",
-          "Number Employed - Men" = "No..Male.Empl",
-          "Total Employed"= "Total.No..Empl"
-        ),
-      ),
-      # Color selection
-      selectInput(
-        inputId = "col_var",
-        label = "Color Variable:",
-        selected = "No..Male.Empl",
-        choices = c(
-          "Hourly Pay - Women" = "Female.Avg.Hrly.Rate",
-          "Hourly Pay - Men" = "Male.Avg.Hrly.Rate",
-          "Total Average Hourly Pay" = "Total.Avg.Hrly.Rate",
-          "Number Employed - Women" = "No..Female.Empl",
-          "Number Employed - Men" = "No..Male.Empl",
-          "Total Employed"= "Total.No..Empl"
-        ),
-      ),
-      # Number of obs. slider
+      
+      # Observation slider
       sliderInput(
         "slider",
-        "Number of observations",
+        "Number of observations:",
         min = 10,
         max = nrow(df_genders),
         step = 1,
-        value = 100
+        value = 444,
+        animate = animationOptions(interval = 100, loop = F)
       )
     ),
-    mainPanel(scatterD3Output(
-      outputId = "occ_scatter"
+    mainPanel(plotlyOutput(
+      outputId = "gender_plotly"
     ))
   )
 )
 
-pg_loc <- tabPanel(
-  "Race and Location",
-  titlePanel("Race and Location"),
+# Occupation page
+pg_occ <- tabPanel(
+  "Occupation",
+  titlePanel("Comparison by Occupation"),
   sidebarLayout(
+    # Sidebar content
     sidebarPanel(
-      selectInput(
-        inputId = "arr_var",
-        label = "Sort by:",
-        choices = c(
-          "F" = "Female.Avg.Hrly.Rate",
-          "M" = "Male.Avg.Hrly.Rate"
-        ),
-        selected = "High"
-      )
+      
+      
     ),
-    mainPanel(plotlyOutput(outputId = "plotly"))
+    mainPanel(plotlyOutput(
+      outputId = "occ_plotly"
+    ))
   )
 )
 
-
-pg_occ <- tabPanel("Occupations",
-                   titlePanel("Occupations"))
+# Race and location page
+pg_loc <- tabPanel(
+  "Race and Location",
+  titlePanel("Comparison by Race and Location"),
+  sidebarLayout(
+    
+    # Sidebar content
+    sidebarPanel(
+      
+    ),
+    mainPanel()
+  )
+)
 
 ui <- navbarPage(theme = "help.css",
                  "WA Salary Analytics",
                  pg_overview,
-                 pg_gender,
+                 pg_occ,
                  pg_loc,
-                 pg_occ
+                 pg_gender
 )

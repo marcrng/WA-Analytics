@@ -9,11 +9,11 @@ runtime: shiny
 ### Project Goals
 This project aims to answer the following:
 
-- **What is the wage disparity between men and women for different occupations in Seattle?**
+- **Which occupation groups saw the largest growth in Washington State from 2014 to 2018?**
 
 - **How do Washington State's residents compare in terms of income when measured against county and race?**
 
-- **Which occupation groups saw the largest growth in Washington State from 2014 to 2018?**
+- **What is the wage disparity between men and women for different occupations in Seattle?**
 
 ***
 ### What to Expect
