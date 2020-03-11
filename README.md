@@ -1,4 +1,4 @@
-# Final Project ([Report Link](https://marcrng.github.io/self/))
+# Final Project ([Midpoint Report](https://marcrng.github.io/self/)) ([Final Report](https://marcrng.shinyapps.io/WA_Analytics/))
 ## Domain of Interest
 - **Why are you interested in this field/domain? (2-3 sentences)**
     - To explore wage trends in Washington in terms of location/demographic
