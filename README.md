@@ -7,7 +7,7 @@
 
 - **What other examples of data driven projects have you found related to this domain (share at least 3)?**
     - [_Income by Location, data.io_](https://datausa.io/profile/geo/washington#income_geo) by datausa.io. 
-        - Visualizes the median household income by WA counties. Visualization can be filtered by race
+        - Visualizes the median household income by WA counties. Visualization can be filtered by race.
     - [_The Top Charts of 2016_](https://www.epi.org/publication/the-top-charts-of-2016-13-charts-that-show-the-difference-between-the-economy-we-have-now-and-the-economy-we-could-have/)
         - Various charts visualizing wage trends and disparaties in America.
     - [_Pewresearch.org_](https://www.pewresearch.org/fact-tank/2018/08/07/for-most-us-workers-real-wages-have-barely-budged-for-decades/)
